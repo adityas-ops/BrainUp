@@ -35,7 +35,8 @@ function Header() {
           width={40}
           height={40}
         />
-        BrainUp
+        <p className="font-serif font-thin">BrainUp</p>
+      
       </Link>
       {/* nav */}
       <div className="flex items-center space-x-3 justify-center">
@@ -49,6 +50,11 @@ function Header() {
             </Link>
           );
         })}
+      </div>
+      <div className="">
+        <button className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-[#4053FF]">
+          Sign In
+        </button>
       </div>
     </div>
   );
