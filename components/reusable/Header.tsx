@@ -7,7 +7,6 @@ import { IoHomeOutline } from "react-icons/io5";
 import { CiPlay1 } from "react-icons/ci";
 import { MdOutlineLeaderboard } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
-import path from "path";
 
 function Header() {
   const navItems = [
