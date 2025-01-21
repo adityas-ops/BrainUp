@@ -7,6 +7,7 @@ import { IoHomeOutline } from "react-icons/io5";
 import { CiPlay1 } from "react-icons/ci";
 import { MdOutlineLeaderboard } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
+import { useRouter } from "next/navigation";
 
 function Header() {
   const navItems = [
@@ -51,11 +52,14 @@ function Header() {
     },
     ]
 
+
+    const router = useRouter();
+
   const pathName = usePathname();
-  console.log("pathName", pathName);
+  // console.log("pathName", pathName);
   return (
     <>
-      <div className=" w-full h-[60px] z-50 bg-background/5  backdrop-filter drop-shadow-lg py-[10px] px-[20px] flex justify-between items-center">
+      <div className=" w-full h-[60px] fixed top-0 backdrop-blur-xl left-0 right-0 z-50 backdrop-filter drop-shadow-2xl   py-[10px] px-[20px] flex justify-between items-center">
         {/* logo */}
         <Link
           href="/"
@@ -77,11 +81,11 @@ function Header() {
                 key={index}
                 href={item.link}
                 className={`
-                px-4 py-2 rounded-md text-sm font-semibold hover:text-white hover:font-bold
+                px-4 py-2 rounded-md text-sm font-semibold hover:text-activeColor hover:font-bold
             ${
               pathName === item.link
                 ? "text-white bg-activeColor"
-                : " text-textColorSecondary bg-transparent"
+                : " text-zinc-200 bg-transparent"
             }
             `}
               >
@@ -91,7 +95,10 @@ function Header() {
           })}
         </div>
         <div className="">
-          <button className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-[#4053FF]">
+          <button onClick={()=>{
+            // router
+            router.push("/login")
+          }} className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-[#4053FF]">
             Sign In
           </button>
         </div>
