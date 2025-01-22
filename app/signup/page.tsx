@@ -7,8 +7,8 @@ function Page() {
   return (
     <div className=" bg-no-repeat relative overflow-hidden bg-center w-full h-full flex justify-center items-center">
       <SignupAnimation />
-      <div className=" absolute w-full h-full top-0 left-0 right-0 flex items-center justify-center bottom-0 bg-black/45">
-        <div className=" w-full h-full sm:w-[35%] py-[30px] px-[15px] sm:px-[30px] sm:h-[90%]   rounded-lg">
+      <div className=" absolute overflow-y-scroll w-full h-full top-0 left-0 right-0 flex items-center justify-center bottom-0 bg-black/45">
+        <div className=" w-full h-full sm:w-[40%] py-[30px] px-[15px] sm:px-[30px] sm:h-[95%]   rounded-lg">
           <p className=" text-4xl mt-[20%] sm:mt-0 font-semibold text-white text-center leading-[0.5]">
             Join BrainUp Today!
           </p>
