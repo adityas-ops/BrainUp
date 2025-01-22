@@ -47,7 +47,7 @@ function Page() {
               />
             </div>
           </div>
-          <div className=" w-full sm:w-[50%] h-full flex flex-col  justify-center">
+          <div className=" w-full sm:w-[50%] h-full flex flex-col mt-[20%] sm:mt-0 justify-start  sm:justify-center">
           <Link
                   className=" w-[90px] sm:hidden absolute top-5 left-5 hover:scale-[1.05] duration-300 font-bold bg-white rounded-md text-black text-center flex items-center justify-center h-[35px]"
                   href="/"

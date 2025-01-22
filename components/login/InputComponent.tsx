@@ -21,7 +21,7 @@ function InputComponent({
     <>
       {isPassword ? (
         <>
-          <div className="border relative border-gray-300 rounded-lg w-full h-[50px]  mt-2 focus:outline-none focus:ring-2 focus:ring-activeColor focus:border-transparent">
+          <div className="border relative border-gray-300 rounded-lg w-full h-[45px]  mt-2 focus:outline-none focus:ring-2 focus:ring-activeColor focus:border-transparent">
             <input
               placeholder={label}
               value={value}
@@ -55,7 +55,7 @@ function InputComponent({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           type={"text"}
-          className="border border-gray-300 rounded-lg w-full h-[50px] px-3 mt-2 focus:outline-none focus:ring-2 focus:ring-activeColor focus:border-transparent"
+          className="border border-gray-300 rounded-lg w-full h-[45px] px-3 mt-2 focus:outline-none focus:ring-2 focus:ring-activeColor focus:border-transparent"
         />
       )}
     </>
