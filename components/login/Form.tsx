@@ -3,10 +3,41 @@ import React, { useState } from "react";
 import InputComponent from "./InputComponent";
 import Image from "next/image";
 import Link from "next/link";
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from "axios";
+
+
 
 function Form() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userInfo, setUserInfo] = useState<unknown>(null);
+
+
+  // for google login function 
+  const googleLog = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log("Access Token:", tokenResponse.access_token);
+      
+      try {
+        const response = await axios.get(
+          "https://www.googleapis.com/oauth2/v2/userinfo",
+          {
+            headers: {
+              Authorization: `Bearer ${tokenResponse.access_token}`,
+            },
+          }
+        );
+        console.log("User Info:", response.data);
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    },
+  })
+
+  console.log('userInfo------->', userInfo);
+
   return (
     <div className=" flex px-0 sm:px-[40px] flex-col space-y-5">
       <InputComponent value={email} setValue={setEmail} label="email address" />
@@ -26,7 +57,7 @@ function Form() {
         </p>
         <div className="w-full h-[1px] bg-gray-400" />
       </div>
-      <button className=" w-full h-[45px] rounded-lg bg-white flex items-center justify-center  text-black font-bold hover:brightness-75 font-carme ">
+      <button onClick={()=>googleLog()} className=" w-full h-[45px] rounded-lg bg-white flex items-center justify-center  text-black font-bold hover:brightness-75 font-carme ">
         <Image
           src="/assets/login/google.svg"
           width={24}

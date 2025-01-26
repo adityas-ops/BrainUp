@@ -1,5 +1,6 @@
 import "./globals.css";
 import SplashWrapper from "@/components/SplashWrapper";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 export const metadata = {
   title: "BrainUp | Level Up Your Knowledge.",
@@ -18,6 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}>
     <html lang="en">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -46,5 +48,6 @@ export default function RootLayout({
         </SplashWrapper>
       </body>
     </html>
+    </GoogleOAuthProvider>
   );
 }
