@@ -1,10 +1,14 @@
 import "./globals.css";
 import SplashWrapper from "@/components/SplashWrapper";
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import {UserProvider} from "../context/UserContext"
+
 
 export const metadata = {
   title: "BrainUp | Level Up Your Knowledge.",
   description: "BrainUp is a Quiz platform to level up your knowledge.",
+
+
   icons: [
     {
       rel: "icon",
@@ -18,7 +22,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
+    <UserProvider>
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}>
     <html lang="en">
       <head>
@@ -49,5 +55,6 @@ export default function RootLayout({
       </body>
     </html>
     </GoogleOAuthProvider>
+    </UserProvider>
   );
 }

@@ -1,13 +1,29 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { IoHomeOutline } from "react-icons/io5";
 import { CiPlay1 } from "react-icons/ci";
 import { MdOutlineLeaderboard } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
 import { useRouter } from "next/navigation";
+import { gql, useMutation } from "@apollo/client";
+import { useUser } from "../../context/UserContext";
+
+const VALIDATE_TOKEN = gql`
+  mutation ValidateToken($token: String!) {
+    validateToken(token: $token) {
+      success
+      message
+      user {
+        id
+        name
+        email
+      }
+    }
+  }
+`;
 
 function Header() {
   const navItems = [
@@ -29,7 +45,7 @@ function Header() {
     },
   ];
 
-    const mobileNavItems = [
+  const mobileNavItems = [
     {
       name: "Home",
       link: "/",
@@ -38,25 +54,58 @@ function Header() {
     {
       name: "Explore Quizes",
       link: "/Quizzes",
-      icon: <CiPlay1  className="text-[20px]" />,
+      icon: <CiPlay1 className="text-[20px]" />,
     },
     {
       name: "Leaderboard",
       link: "/Leaderboard",
-      icon: <MdOutlineLeaderboard  className="text-[20px]"/>,
+      icon: <MdOutlineLeaderboard className="text-[20px]" />,
     },
     {
       name: "Dashboard",
       link: "/Dashboard",
-      icon: <RxDashboard  className="text-[20px]"/>,
+      icon: <RxDashboard className="text-[20px]" />,
     },
-    ]
-
-
-    const router = useRouter();
-
+  ];
+  const router = useRouter();
   const pathName = usePathname();
   // console.log("pathName", pathName);
+  const { user, updateUser, clearUser } = useUser();
+  const [validateToken] = useMutation(VALIDATE_TOKEN);
+
+  console.log("user", user);
+
+  useEffect(() => {
+    const initializeUser = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        clearUser();
+        return;
+      }
+
+      try {
+        const { data } = await validateToken({ variables: { token } });
+
+        if (data.validateToken.success) {
+          updateUser(data.validateToken.user);
+        } else {
+          clearUser();
+          localStorage.removeItem("token");
+          router.push("/login");
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (err) {
+        console.error("Error validating token:");
+        clearUser();
+        localStorage.removeItem("token");
+        router.push("/login");
+      }
+    };
+
+    initializeUser();
+  }, [router, validateToken, updateUser, clearUser]);
+
   return (
     <>
       <div className=" w-full h-[60px] fixed top-0 backdrop-blur-xl left-0 right-0 z-50 backdrop-filter drop-shadow-2xl   py-[10px] px-[20px] flex justify-between items-center">
@@ -81,7 +130,7 @@ function Header() {
                 key={index}
                 href={item.link}
                 className={`
-                px-4 py-2 rounded-md text-sm font-semibold hover:text-activeColor hover:font-bold
+                px-4 py-2 rounded-md text-sm font-semibold hover:bg-activeColor  hover:text-white
             ${
               pathName === item.link
                 ? "text-white bg-activeColor"
@@ -95,12 +144,31 @@ function Header() {
           })}
         </div>
         <div className="">
-          <button onClick={()=>{
-            // router
-            router.push("/login")
-          }} className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-[#4053FF]">
-            Sign In
-          </button>
+          {user ? (
+            <div className="flex items-center space-x-3">
+              <p className=" text-white font-bold">Welcome {user.name}</p>
+              <button
+                onClick={() => {
+                  clearUser();
+                  localStorage.removeItem("token");
+                  // router.push("/login");
+                }}
+                className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-[#4053FF]"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => {
+                // router
+                router.push("/login");
+              }}
+              className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-[#4053FF]"
+            >
+              Sign In
+            </button>
+          )}
         </div>
       </div>
       <div className="sm:hidden border-t-[1px] border-gray-400 flex items-center z-50 rounded-t-md fixed bottom-[-10px] left-0 right-0 h-[80px] bg-background">
@@ -112,8 +180,12 @@ function Header() {
                 href={item.link}
                 className="flex justify-center items-center"
               >
-                <div className={`flex flex-col  gap-y-[5px] items-center justify-center
-                ${pathName === item.link ? "text-activeColor" : "text-gray-400"}`}>
+                <div
+                  className={`flex flex-col  gap-y-[5px] items-center justify-center
+                ${
+                  pathName === item.link ? "text-activeColor" : "text-gray-400"
+                }`}
+                >
                   {item.icon}
                   <p className="text-xs">{item.name}</p>
                 </div>
