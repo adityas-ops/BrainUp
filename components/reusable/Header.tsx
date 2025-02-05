@@ -78,42 +78,76 @@ function Header() {
   const { user, updateUser, clearUser } = useUser();
   const [validateToken] = useMutation(VALIDATE_TOKEN);
 
+  // useEffect(() => {
+  //   const initializeUser = async () => {
+  //     const token = localStorage.getItem("token");
+
+  //     if (!token) {
+  //       clearUser();
+  //       setIsLoading(false);
+  //       return;
+  //     }
+
+  //     try {
+  //       const { data } = await validateToken({ variables: { token } });
+
+  //       if (data.validateToken.success) {
+  //         updateUser(data.validateToken.user);
+  //       } else {
+  //         // Only clear the token if validation explicitly fails
+  //         clearUser();
+  //         localStorage.removeItem("token");
+  //         router.push("/login");
+  //       }
+  //     } catch (err) {
+  //       console.error("Error validating token:", err);
+  //       // Do not clear the token on network errors or other unexpected issues
+  //       setIsLoading(false);
+  //       return;
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   initializeUser();
+  // }, [router, validateToken, updateUser, clearUser]);
+
   useEffect(() => {
     const initializeUser = async () => {
       const token = localStorage.getItem("token");
-
+  
       if (!token) {
         clearUser();
         setIsLoading(false);
         return;
       }
-
+  
       try {
         const { data } = await validateToken({ variables: { token } });
-
-        if (data.validateToken.success) {
+  
+        if (data?.validateToken?.success) {
           updateUser(data.validateToken.user);
         } else {
+          console.warn("Token validation failed. Logging out...");
           clearUser();
           localStorage.removeItem("token");
           router.push("/login");
         }
       } catch (err) {
         console.error("Error validating token:", err);
-        clearUser();
-        localStorage.removeItem("token");
-        router.push("/login");
+        // ✅ Do not clear the token if it's a network error or an unexpected issue
       } finally {
         setIsLoading(false);
       }
     };
-
+  
     initializeUser();
   }, [router, validateToken, updateUser, clearUser]);
+  
 
   if (isLoading) {
     return (
-      <div className="w-full h-screen bg-background   fixed top-0 backdrop-blur-4xl left-0 right-0 z-50 backdrop-filter drop-shadow-2xl py-[10px] px-[20px] flex justify-center items-center">
+      <div className="w-full h-screen bg-background fixed top-0 backdrop-blur-4xl left-0 right-0 z-50 backdrop-filter drop-shadow-2xl py-[10px] px-[20px] flex justify-center items-center">
         <Loader />
       </div>
     );
@@ -159,27 +193,20 @@ function Header() {
         <div className="">
           {user ? (
             <div className="flex items-center space-x-3">
-              {/* <p className="text-white font-bold">Welcome {user.name}</p>
-              <button
+              <div
                 onClick={() => {
-                  clearUser();
-                  localStorage.removeItem("token");
+                  setShowProfile(!showProfile);
                 }}
-                className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-[#4053FF]"
+                className="h-[50px] cursor-pointer w-[50px] relative border-[1px] border-white rounded-full"
               >
-                Logout
-              </button> */}
-              <button onClick={()=>{
-                setShowProfile(!showProfile)
-              }} className="  h-[50px] w-[50px] relative  border-[1px] border-white rounded-full">
                 <InitialsAvatar className="" name={user.name} />
                 {showProfile && (
-                  <div className="absolute z-50 bottom-[-145px] border-[0.5px] border-zinc-200 right-0 h-[140px] pt-2 w-[200px]  px-[15px] bg-black rounded-md  flex justify-center ">
-                    <div className=" ">
+                  <div className="absolute z-50 bottom-[-145px] border-[0.5px] border-zinc-200 right-0 h-[140px] pt-2 w-[200px] px-[15px] bg-black rounded-md flex justify-center">
+                    <div className="">
                       <p className="text-white font-bold py-2 border-b-[1px] border-gray-400">
                         {user.name}
                       </p>
-                      <p className=" text-white font-light py-2 border-b-[1px] border-gray-400">
+                      <p className="text-white font-light py-2 border-b-[1px] border-gray-400">
                         {user.email.slice(0, 4)}**{user.email.slice(15)}
                       </p>
                       <button
@@ -187,15 +214,15 @@ function Header() {
                           clearUser();
                           localStorage.removeItem("token");
                         }}
-                        className=" flex flex-row items-center text-red-600 py-2 text-center justify-center w-full text-[18px]"
+                        className="flex flex-row items-center text-red-600 py-2 text-center justify-center w-full text-[18px]"
                       >
                         Logout
-                        <MdOutlineLogout className=" ml-1" />
+                        <MdOutlineLogout className="ml-1" />
                       </button>
                     </div>
                   </div>
                 )}
-              </button>
+              </div>
             </div>
           ) : (
             <button
