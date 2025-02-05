@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import SplashScreen from "./SplashScreen";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+// import ProtectedRoute from "./ProtectedRoute";
 
 export default function SplashWrapper({
   children,
@@ -30,13 +31,15 @@ export default function SplashWrapper({
 
   return (
     <>
-      <ApolloProvider client={client}>
-        {showSplash ? (
-          <SplashScreen onFinish={onFinish} />
-        ) : (
-          <div>{children}</div>
-        )}
-      </ApolloProvider>
+      {/* <ProtectedRoute> */}
+        <ApolloProvider client={client}>
+          {showSplash ? (
+            <SplashScreen onFinish={onFinish} />
+          ) : (
+            <div>{children}</div>
+          )}
+        </ApolloProvider>
+      {/* </ProtectedRoute> */}
     </>
   );
 }

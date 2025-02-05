@@ -4,9 +4,11 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import {UserProvider} from "../context/UserContext"
 
 
+
 export const metadata = {
   title: "BrainUp | Level Up Your Knowledge.",
   description: "BrainUp is a Quiz platform to level up your knowledge.",
+  
 
 
   icons: [
@@ -15,6 +17,7 @@ export const metadata = {
       url: "assets/logo/brainup.ico",
     },
   ],
+
 };
 
 export default function RootLayout({

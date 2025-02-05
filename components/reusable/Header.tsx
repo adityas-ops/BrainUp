@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { IoHomeOutline } from "react-icons/io5";
 import { CiPlay1 } from "react-icons/ci";
@@ -10,6 +10,10 @@ import { RxDashboard } from "react-icons/rx";
 import { useRouter } from "next/navigation";
 import { gql, useMutation } from "@apollo/client";
 import { useUser } from "../../context/UserContext";
+import Loader from "../Loader";
+import { MdOutlineLogout } from "react-icons/md";
+import InitialsAvatar from "react-initials-avatar";
+import "react-initials-avatar/lib/ReactInitialsAvatar.css";
 
 const VALIDATE_TOKEN = gql`
   mutation ValidateToken($token: String!) {
@@ -26,6 +30,7 @@ const VALIDATE_TOKEN = gql`
 `;
 
 function Header() {
+  const [isLoading, setIsLoading] = useState(true);
   const navItems = [
     {
       name: "Home",
@@ -67,13 +72,11 @@ function Header() {
       icon: <RxDashboard className="text-[20px]" />,
     },
   ];
+  const [showProfile, setShowProfile] = useState(false);
   const router = useRouter();
   const pathName = usePathname();
-  // console.log("pathName", pathName);
   const { user, updateUser, clearUser } = useUser();
   const [validateToken] = useMutation(VALIDATE_TOKEN);
-
-  console.log("user", user);
 
   useEffect(() => {
     const initializeUser = async () => {
@@ -81,6 +84,7 @@ function Header() {
 
       if (!token) {
         clearUser();
+        setIsLoading(false);
         return;
       }
 
@@ -94,21 +98,30 @@ function Header() {
           localStorage.removeItem("token");
           router.push("/login");
         }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
-        console.error("Error validating token:");
+        console.error("Error validating token:", err);
         clearUser();
         localStorage.removeItem("token");
         router.push("/login");
+      } finally {
+        setIsLoading(false);
       }
     };
 
     initializeUser();
   }, [router, validateToken, updateUser, clearUser]);
 
+  if (isLoading) {
+    return (
+      <div className="w-full h-screen bg-background   fixed top-0 backdrop-blur-4xl left-0 right-0 z-50 backdrop-filter drop-shadow-2xl py-[10px] px-[20px] flex justify-center items-center">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <>
-      <div className=" w-full h-[60px] fixed top-0 backdrop-blur-xl left-0 right-0 z-50 backdrop-filter drop-shadow-2xl   py-[10px] px-[20px] flex justify-between items-center">
+      <div className="w-full h-[60px] fixed top-0 backdrop-blur-xl left-0 right-0 z-50 backdrop-filter drop-shadow-2xl py-[10px] px-[20px] flex justify-between items-center">
         {/* logo */}
         <Link
           href="/"
@@ -123,20 +136,20 @@ function Header() {
           <p className="font-serif font-thin">BrainUp</p>
         </Link>
         {/* nav */}
-        <div className="sm:flex hidden  items-center space-x-3 justify-center">
+        <div className="sm:flex hidden items-center space-x-3 justify-center">
           {navItems.map((item, index) => {
             return (
               <Link
                 key={index}
                 href={item.link}
                 className={`
-                px-4 py-2 rounded-md text-sm font-semibold hover:bg-activeColor  hover:text-white
-            ${
-              pathName === item.link
-                ? "text-white bg-activeColor"
-                : " text-zinc-200 bg-transparent"
-            }
-            `}
+                px-4 py-2 rounded-md text-sm font-semibold hover:bg-activeColor hover:text-white
+                ${
+                  pathName === item.link
+                    ? "text-white bg-activeColor"
+                    : "text-zinc-200 bg-transparent"
+                }
+              `}
               >
                 <p>{item.name}</p>
               </Link>
@@ -146,22 +159,47 @@ function Header() {
         <div className="">
           {user ? (
             <div className="flex items-center space-x-3">
-              <p className=" text-white font-bold">Welcome {user.name}</p>
+              {/* <p className="text-white font-bold">Welcome {user.name}</p>
               <button
                 onClick={() => {
                   clearUser();
                   localStorage.removeItem("token");
-                  // router.push("/login");
                 }}
                 className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-[#4053FF]"
               >
                 Logout
+              </button> */}
+              <button onClick={()=>{
+                setShowProfile(!showProfile)
+              }} className="  h-[50px] w-[50px] relative  border-[1px] border-white rounded-full">
+                <InitialsAvatar className="" name={user.name} />
+                {showProfile && (
+                  <div className="absolute z-50 bottom-[-145px] border-[0.5px] border-zinc-200 right-0 h-[140px] pt-2 w-[200px]  px-[15px] bg-black rounded-md  flex justify-center ">
+                    <div className=" ">
+                      <p className="text-white font-bold py-2 border-b-[1px] border-gray-400">
+                        {user.name}
+                      </p>
+                      <p className=" text-white font-light py-2 border-b-[1px] border-gray-400">
+                        {user.email.slice(0, 4)}**{user.email.slice(15)}
+                      </p>
+                      <button
+                        onClick={() => {
+                          clearUser();
+                          localStorage.removeItem("token");
+                        }}
+                        className=" flex flex-row items-center text-red-600 py-2 text-center justify-center w-full text-[18px]"
+                      >
+                        Logout
+                        <MdOutlineLogout className=" ml-1" />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </button>
             </div>
           ) : (
             <button
               onClick={() => {
-                // router
                 router.push("/login");
               }}
               className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-[#4053FF]"
@@ -172,7 +210,7 @@ function Header() {
         </div>
       </div>
       <div className="sm:hidden border-t-[1px] border-gray-400 flex items-center z-50 rounded-t-md fixed bottom-[-10px] left-0 right-0 h-[80px] bg-background">
-        <div className=" w-full h-full grid grid-cols-4">
+        <div className="w-full h-full grid grid-cols-4">
           {mobileNavItems.map((item, index) => {
             return (
               <Link
@@ -181,10 +219,12 @@ function Header() {
                 className="flex justify-center items-center"
               >
                 <div
-                  className={`flex flex-col  gap-y-[5px] items-center justify-center
-                ${
-                  pathName === item.link ? "text-activeColor" : "text-gray-400"
-                }`}
+                  className={`flex flex-col gap-y-[5px] items-center justify-center
+                  ${
+                    pathName === item.link
+                      ? "text-activeColor"
+                      : "text-gray-400"
+                  }`}
                 >
                   {item.icon}
                   <p className="text-xs">{item.name}</p>
