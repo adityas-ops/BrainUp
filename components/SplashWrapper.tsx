@@ -25,7 +25,8 @@ export default function SplashWrapper({
   };
 
   const client = new ApolloClient({
-    uri: "https://brainup-backend.onrender.com/",
+    // uri: "https://brainup-backend.onrender.com/",
+    uri:"http://13.231.192.180:4000/",
     cache: new InMemoryCache(),
   });
 
