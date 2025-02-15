@@ -1,36 +1,35 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { usePathname } from "next/navigation";
 import { IoHomeOutline } from "react-icons/io5";
 import { CiPlay1 } from "react-icons/ci";
 import { MdOutlineLeaderboard } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
 import { useRouter } from "next/navigation";
-import { gql, useMutation } from "@apollo/client";
 import { useUser } from "../../context/UserContext";
-import Loader from "../Loader";
 import { MdOutlineLogout } from "react-icons/md";
 import InitialsAvatar from "react-initials-avatar";
+
 import "react-initials-avatar/lib/ReactInitialsAvatar.css";
 
-const VALIDATE_TOKEN = gql`
-  mutation ValidateToken($token: String!) {
-    validateToken(token: $token) {
-      success
-      message
-      user {
-        id
-        name
-        email
-      }
-    }
-  }
-`;
+// const VALIDATE_TOKEN = gql`
+//   mutation ValidateToken($token: String!) {
+//     validateToken(token: $token) {
+//       success
+//       message
+//       user {
+//         id
+//         name
+//         email
+//       }
+//     }
+//   }
+// `;
 
 function Header() {
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const navItems = [
     {
       name: "Home",
@@ -75,8 +74,11 @@ function Header() {
   const [showProfile, setShowProfile] = useState(false);
   const router = useRouter();
   const pathName = usePathname();
-  const { user, updateUser, clearUser } = useUser();
-  const [validateToken] = useMutation(VALIDATE_TOKEN);
+
+  const { user,clearUser } = useUser();
+
+  // const { user, updateUser, clearUser } = useUser();
+  // const [validateToken] = useMutation(VALIDATE_TOKEN);
 
   // useEffect(() => {
   //   const initializeUser = async () => {
@@ -112,46 +114,38 @@ function Header() {
   //   initializeUser();
   // }, [router, validateToken, updateUser, clearUser]);
 
-  useEffect(() => {
-    const initializeUser = async () => {
-      const token = localStorage.getItem("token");
+  // useEffect(() => {
+  //   const initializeUser = async () => {
+  //     const token = localStorage.getItem("token");
   
-      if (!token) {
-        clearUser();
-        setIsLoading(false);
-        return;
-      }
+  //     if (!token) {
+  //       clearUser();
+  //       setIsLoading(false);
+  //       return;
+  //     }
   
-      try {
-        const { data } = await validateToken({ variables: { token } });
+  //     try {
+  //       const { data } = await validateToken({ variables: { token } });
   
-        if (data?.validateToken?.success) {
-          updateUser(data.validateToken.user);
-        } else {
-          console.warn("Token validation failed. Logging out...");
-          clearUser();
-          localStorage.removeItem("token");
-          router.push("/login");
-        }
-      } catch (err) {
-        console.error("Error validating token:", err);
-        // ✅ Do not clear the token if it's a network error or an unexpected issue
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //       if (data?.validateToken?.success) {
+  //         updateUser(data.validateToken.user);
+  //       } else {
+  //         console.warn("Token validation failed. Logging out...");
+  //         clearUser();
+  //         localStorage.removeItem("token");
+  //         router.push("/login");
+  //       }
+  //     } catch (err) {
+  //       console.error("Error validating token:", err);
+  //       // ✅ Do not clear the token if it's a network error or an unexpected issue
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
   
-    initializeUser();
-  }, [router, validateToken, updateUser, clearUser]);
+  //   initializeUser();
+  // }, [router, validateToken, updateUser, clearUser]);
   
-
-  if (isLoading) {
-    return (
-      <div className="w-full h-screen bg-background fixed top-0 backdrop-blur-4xl left-0 right-0 z-50 backdrop-filter drop-shadow-2xl py-[10px] px-[20px] flex justify-center items-center">
-        <Loader />
-      </div>
-    );
-  }
 
   return (
     <>
