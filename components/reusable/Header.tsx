@@ -14,22 +14,9 @@ import InitialsAvatar from "react-initials-avatar";
 
 import "react-initials-avatar/lib/ReactInitialsAvatar.css";
 
-// const VALIDATE_TOKEN = gql`
-//   mutation ValidateToken($token: String!) {
-//     validateToken(token: $token) {
-//       success
-//       message
-//       user {
-//         id
-//         name
-//         email
-//       }
-//     }
-//   }
-// `;
+
 
 function Header() {
-  // const [isLoading, setIsLoading] = useState(true);
   const navItems = [
     {
       name: "Home",
@@ -77,79 +64,12 @@ function Header() {
 
   const { user,clearUser } = useUser();
 
-  // const { user, updateUser, clearUser } = useUser();
-  // const [validateToken] = useMutation(VALIDATE_TOKEN);
-
-  // useEffect(() => {
-  //   const initializeUser = async () => {
-  //     const token = localStorage.getItem("token");
-
-  //     if (!token) {
-  //       clearUser();
-  //       setIsLoading(false);
-  //       return;
-  //     }
-
-  //     try {
-  //       const { data } = await validateToken({ variables: { token } });
-
-  //       if (data.validateToken.success) {
-  //         updateUser(data.validateToken.user);
-  //       } else {
-  //         // Only clear the token if validation explicitly fails
-  //         clearUser();
-  //         localStorage.removeItem("token");
-  //         router.push("/login");
-  //       }
-  //     } catch (err) {
-  //       console.error("Error validating token:", err);
-  //       // Do not clear the token on network errors or other unexpected issues
-  //       setIsLoading(false);
-  //       return;
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   initializeUser();
-  // }, [router, validateToken, updateUser, clearUser]);
-
-  // useEffect(() => {
-  //   const initializeUser = async () => {
-  //     const token = localStorage.getItem("token");
   
-  //     if (!token) {
-  //       clearUser();
-  //       setIsLoading(false);
-  //       return;
-  //     }
-  
-  //     try {
-  //       const { data } = await validateToken({ variables: { token } });
-  
-  //       if (data?.validateToken?.success) {
-  //         updateUser(data.validateToken.user);
-  //       } else {
-  //         console.warn("Token validation failed. Logging out...");
-  //         clearUser();
-  //         localStorage.removeItem("token");
-  //         router.push("/login");
-  //       }
-  //     } catch (err) {
-  //       console.error("Error validating token:", err);
-  //       // ✅ Do not clear the token if it's a network error or an unexpected issue
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  
-  //   initializeUser();
-  // }, [router, validateToken, updateUser, clearUser]);
   
 
   return (
     <>
-      <div className="w-full h-[60px] fixed top-0 backdrop-blur-xl left-0 right-0 z-50 backdrop-filter drop-shadow-2xl py-[10px] px-[20px] flex justify-between items-center">
+      <div className="w-full h-[60px] border-b-[0.2px] border-gray-500 bg-transparent fixed top-0 backdrop-blur-xl left-0 right-0 z-50 backdrop-filter drop-shadow-2xl py-[10px] px-[20px] flex justify-between items-center">
         {/* logo */}
         <Link
           href="/"

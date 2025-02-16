@@ -49,9 +49,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-background">
+      <body className="">
         <SplashWrapper>
-          <div className=" w-screen h-screen overflow-hidden bg-background">
+          <div className=" w-screen h-screen overflow-hidden ">
             <div className=" w-full h-full overflow-y-scroll">{children}</div>
           </div>
         </SplashWrapper>

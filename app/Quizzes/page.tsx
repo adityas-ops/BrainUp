@@ -1,13 +1,6 @@
-import Header from '@/components/reusable/Header'
-import React from 'react'
+import Main from "@/components/quizes/Main";
+import category from "@/data/category";
 
-function Page() {
-  return (
-    <div>
-      <Header/>
-        <h1>Quized</h1>
-    </div>
-  )
+export default function Page() {
+  return <Main category={category} />;
 }
-
-export default Page

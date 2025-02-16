@@ -15,7 +15,7 @@ export default {
         activeColor: "#DB2777",
         textColor: "#FFFFFF",
         textColorSecondary: "#CBCBCB",
-        navColor:"4F4F4F",
+        navColor:"#4F4F4F",
         success: "#00FF00",
         error: "#FF0000",
         warning: "#FFA500",
