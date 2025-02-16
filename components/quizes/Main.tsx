@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { CategoryType } from "@/data/category";
 import { IoCloseOutline } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 interface MainProps {
   category: {
@@ -15,12 +16,14 @@ interface MainProps {
 }
 
 function Main({ category }: MainProps) {
+    const Router = useRouter();
   const [data, setData] = useState<CategoryType[]>(category);
   const [search, setSearch] = useState<string>("");
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
+
 
   useEffect(() => {
     if (search === "") {
@@ -72,6 +75,9 @@ function Main({ category }: MainProps) {
               <div
                 key={index}
                 className="w-full h-[250px] bg-cardBackground rounded-md cursor-pointer"
+                onClick={()=>{
+                    Router.push(`/quiz/${item.id}`)
+                }}
               >
                 <div className="h-[180px] w-full  overflow-hidden">
                   <Image
